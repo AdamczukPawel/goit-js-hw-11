@@ -1,10 +1,12 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import { fetchImages } from './fetchImages';
+import { fetchImages, page } from './fetchImages';
 
 const searchBox = document.querySelector("#search-form");
 const inputArea = document.querySelector("#search-form input");
 const gallery = document.querySelector(".gallery");
+
+let page = 1;
 
 function showMatchingImages(image) {
     const markup = image.hits
@@ -32,7 +34,7 @@ function showMatchingImages(image) {
                 </div>`;
     })
     .join("");
-  gallery.insertAdjacentHTML('afterbegin', markup);
+  gallery.insertAdjacentHTML('beforeend', markup);
 }
 
 function searchAndShowImages() {
@@ -41,13 +43,14 @@ function searchAndShowImages() {
     if (inputedValue.length !== 0) {
         fetchImages(inputedValue)
             .then(data => {
-                // console.log(data.totalHits)
-                Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images`);
-                showMatchingImages(data);
+                if (data.totalHits !== 0){
+                    Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images`);
+                    showMatchingImages(data);
+                } else {
+                    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+                }
             })
-    } else {
-            Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    }
+    } 
 };
 
 searchBox.addEventListener('submit', (event) => {
