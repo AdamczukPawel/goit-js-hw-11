@@ -13,6 +13,8 @@ body {
   color: #212121;
   line-height: 1.5;
   margin: 0;
+  width: 100%;
+  position: inherit;
 }
 
 header {
@@ -41,4 +43,30 @@ search-form {
   max-width: 320px;
   margin-bottom: 16px;
   margin-top: 0px;
+}
+
+.gallery {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 20% 20% 20% 20%;
+  /* column-gap: 10px;
+  row-gap: 15px; */
+}
+
+.load-more {
+  visibility: hidden;
+  position: relative;
+  width: 200px;
+  border: none;
+  border-radius: 15px;
+  height: 50px;
+  left: 50%;
+  margin-left: -100px;
+  margin-bottom: 15px;
+  background-color: #1d57cc;
+  color: #fafafa;
+}
+.load-more:hover {
+  cursor: pointer;
+  background-color: #0042c5;
 }

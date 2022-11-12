@@ -1,10 +1,11 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import { fetchImages, page } from './fetchImages';
+import { fetchImages, perPage } from './fetchImages';
 
 const searchBox = document.querySelector("#search-form");
 const inputArea = document.querySelector("#search-form input");
 const gallery = document.querySelector(".gallery");
+const loadMoreButton = document.querySelector(".load-more");
 
 let page = 1;
 
@@ -12,7 +13,7 @@ function showMatchingImages(image) {
     const markup = image.hits
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
         return `<div class="photo-card">
-                    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+                    <img src="${webformatURL}" alt="${tags}" loading="lazy" width=400px/>
                     <div class="info">
                         <p class="info-item">
                             <b>Likes</b>
@@ -35,7 +36,7 @@ function showMatchingImages(image) {
     })
     .join("");
   gallery.insertAdjacentHTML('beforeend', markup);
-}
+};
 
 function searchAndShowImages() {
     const inputedValue = inputArea.value.trim();
@@ -43,9 +44,13 @@ function searchAndShowImages() {
     if (inputedValue.length !== 0) {
         fetchImages(inputedValue)
             .then(data => {
+                const limit = data.totalHits / perPage;
                 if (data.totalHits !== 0){
                     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images`);
                     showMatchingImages(data);
+                    if (limit > 1) {
+                        loadMoreButton.style.visibility = "visible";
+                    }
                 } else {
                     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
                 }
@@ -53,7 +58,30 @@ function searchAndShowImages() {
     } 
 };
 
+function showMoreImages() {
+    const inputedValue = inputArea.value.trim();
+    fetchImages(inputedValue)
+        .then(data => {
+            const limit = data.totalHits / perPage;
+            if (limit >= page) {
+                showMatchingImages(data);
+            } else {
+                loadMoreButton.style.visibility = "hidden";
+                Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+            }
+        })
+}
+// console.log(limit);
+
+
 searchBox.addEventListener('submit', (event) => {
     event.preventDefault();
-    searchAndShowImages()
-})
+    searchAndShowImages();
+});
+
+loadMoreButton.addEventListener('click', () => {
+    page += 1;
+    showMoreImages();
+});
+
+export { page };  
