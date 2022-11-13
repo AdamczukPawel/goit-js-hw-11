@@ -1,6 +1,8 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
 import { fetchImages, perPage } from './fetchImages';
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchBox = document.querySelector("#search-form");
 const inputArea = document.querySelector("#search-form input");
@@ -8,11 +10,12 @@ const gallery = document.querySelector(".gallery");
 const loadMoreButton = document.querySelector(".load-more");
 
 let page = 1;
+var lightbox;
 
 function showMatchingImages(image) {
     const markup = image.hits
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-        return `<div class="photo-card">
+        return `<a class="photo-card" href="${largeImageURL}">
                     <img src="${webformatURL}" alt="${tags}" loading="lazy" width=400px height=250px/>
                     <div class="info">
                         <p class="info-item">
@@ -28,10 +31,11 @@ function showMatchingImages(image) {
                             <b>Downloads:</b> ${downloads}
                         </p>
                     </div>
-                </div>`;
+                </a>`;
     })
     .join("");
-  gallery.insertAdjacentHTML('beforeend', markup);
+    gallery.insertAdjacentHTML('beforeend', markup);
+    lightbox = new SimpleLightbox('.gallery a');
 };
 
 function searchAndShowImages() {
@@ -68,7 +72,7 @@ function showMoreImages() {
             }
         })
 }
-// console.log(limit);
+
 
 
 searchBox.addEventListener('submit', (event) => {
