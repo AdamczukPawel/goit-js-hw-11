@@ -13,23 +13,19 @@ function showMatchingImages(image) {
     const markup = image.hits
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
         return `<div class="photo-card">
-                    <img src="${webformatURL}" alt="${tags}" loading="lazy" width=400px/>
+                    <img src="${webformatURL}" alt="${tags}" loading="lazy" width=400px height=250px/>
                     <div class="info">
                         <p class="info-item">
-                            <b>Likes</b>
-                            <p>${likes}</p>
+                            <b>Likes:</b> ${likes}
                         </p>
                         <p class="info-item">
-                            <b>Views</b>
-                            <p>${views}</p>
+                            <b>Views:</b> ${views}
                         </p>
                         <p class="info-item">
-                            <b>Comments</b>
-                            <p>${comments}</p>
+                            <b>Comments:</b> ${comments}
                         </p>
                         <p class="info-item">
-                            <b>Downloads</b>
-                            <p>${downloads}</p>
+                            <b>Downloads:</b> ${downloads}
                         </p>
                     </div>
                 </div>`;
@@ -41,6 +37,7 @@ function showMatchingImages(image) {
 function searchAndShowImages() {
     const inputedValue = inputArea.value.trim();
     gallery.innerHTML = "";
+    loadMoreButton.style.visibility = "hidden";
     if (inputedValue.length !== 0) {
         fetchImages(inputedValue)
             .then(data => {
