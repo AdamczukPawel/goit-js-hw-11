@@ -83,6 +83,6 @@ searchBox.addEventListener('submit', (event) => {
 loadMoreButton.addEventListener('click', () => {
     page += 1;
     showMoreImages();
-});
+}); 
 
 export { page };  
